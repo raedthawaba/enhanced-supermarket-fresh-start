@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:supermarket_app/utils/constants.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
@@ -17,6 +19,13 @@ class DatabaseService {
   }
 
   Future<Database> _initDatabase() async {
+    // Initialize FFI loader for web and desktop platforms
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb) {
+      // Initialize FFI loader
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+    
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, AppConstants.databaseName);
 
