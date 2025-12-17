@@ -133,15 +133,9 @@ class NotificationService {
     required String orderId,
     required DateTime scheduledDate,
   }) async {
-    // Use schedule instead of zonedSchedule for simpler implementation
-    await _notifications.schedule(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      title,
-      message,
-      scheduledDate,
-      _notificationDetails,
-      payload: 'reminder_$orderId',
-    );
+    // Schedule reminder is not implemented yet
+    // TODO: Implement scheduled notifications
+    print('Scheduled reminder: $title - $message');
   }
 
   Future<void> cancelNotification(int id) async {

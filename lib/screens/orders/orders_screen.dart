@@ -139,31 +139,22 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   Widget _buildOrderCard(order) {
     Color statusColor;
-    switch (order.status) {
-      case OrderStatus.pending:
-        statusColor = Colors.orange;
-        break;
-      case OrderStatus.confirmed:
-        statusColor = Colors.blue;
-        break;
-      case OrderStatus.preparing:
-        statusColor = Colors.purple;
-        break;
-      case OrderStatus.readyForDelivery:
-        statusColor = Colors.indigo;
-        break;
-      case OrderStatus.outForDelivery:
-        statusColor = Colors.teal;
-        break;
-      case OrderStatus.delivered:
-        statusColor = Colors.green;
-        break;
-      case OrderStatus.cancelled:
-        statusColor = Colors.red;
-        break;
-      default:
-        statusColor = Colors.grey;
-        break;
+    if (order.status == OrderStatus.pending) {
+      statusColor = Colors.orange;
+    } else if (order.status == OrderStatus.confirmed) {
+      statusColor = Colors.blue;
+    } else if (order.status == OrderStatus.preparing) {
+      statusColor = Colors.purple;
+    } else if (order.status == OrderStatus.readyForDelivery) {
+      statusColor = Colors.indigo;
+    } else if (order.status == OrderStatus.outForDelivery) {
+      statusColor = Colors.teal;
+    } else if (order.status == OrderStatus.delivered) {
+      statusColor = Colors.green;
+    } else if (order.status == OrderStatus.cancelled) {
+      statusColor = Colors.red;
+    } else {
+      statusColor = Colors.grey;
     }
 
     return Card(
