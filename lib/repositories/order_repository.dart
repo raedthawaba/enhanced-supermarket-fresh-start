@@ -150,9 +150,12 @@ class OrderRepository {
     final pendingOrders = orders.where((order) => order.isPending || order.isConfirmed).length;
     final cancelledOrders = orders.where((order) => order.isCancelled).length;
     
-    final totalSpent = orders
-        .where((order) => order.isDelivered)
-        .fold(0.0, (sum, order) => sum + order.totalAmount);
+    double totalSpent = 0.0;
+    for (final order in orders) {
+      if (order.isDelivered) {
+        totalSpent += order.totalAmount;
+      }
+    }
     
     return {
       'totalOrders': totalOrders,
@@ -170,9 +173,13 @@ class OrderRepository {
 
   Future<double> getTotalSpent() async {
     final orders = await getUserOrders();
-    return orders
-        .where((order) => order.isDelivered)
-        .fold(0.0, (sum, order) => sum + order.totalAmount);
+    double total = 0.0;
+    for (final order in orders) {
+      if (order.isDelivered) {
+        total += order.totalAmount;
+      }
+    }
+    return total;
   }
 
   Future<int> getOrderCount() async {
