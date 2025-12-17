@@ -3,6 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supermarket_app/app.dart';
 import 'package:supermarket_app/blocs/auth/auth_bloc.dart';
+import 'package:supermarket_app/screens/splash/splash_screen.dart';
+import 'package:supermarket_app/screens/auth/login_screen.dart';
+import 'package:supermarket_app/screens/home/home_screen.dart';
+import 'package:supermarket_app/test_app.dart';
 import 'package:supermarket_app/blocs/cart/cart_bloc.dart';
 import 'package:supermarket_app/blocs/product/product_bloc.dart';
 import 'package:supermarket_app/blocs/order/order_bloc.dart';
@@ -21,19 +25,30 @@ import 'package:supermarket_app/utils/constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Hive
-  await Hive.initFlutter();
+  try {
+    // Initialize Hive
+    await Hive.initFlutter();
+    
+    // Initialize local database
+    await DatabaseService().init();
+    
+    // Initialize notifications
+    await NotificationService().init();
+    
+    // Initialize locale service
+    LocaleService().init();
+  } catch (e) {
+    print('Initialization error: $e');
+    // Continue with app startup
+  }
   
-  // Initialize local database
-  await DatabaseService().init();
-  
-  // Initialize notifications
-  await NotificationService().init();
-  
-  // Initialize locale service
-  LocaleService().init();
-  
-  runApp(const SupermarketApp());
+  try {
+    runApp(const SupermarketApp());
+  } catch (e) {
+    print('Failed to run main app: $e');
+    // Fallback to simple test app
+    runApp(const TestApp());
+  }
 }
 
 class SupermarketApp extends StatelessWidget {
@@ -129,7 +144,22 @@ class SupermarketApp extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
-        home: const App(),
+        routes: {
+          '/': (context) => const SplashScreen(),
+          '/main': (context) => BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthLoading) {
+                return const SplashScreen();
+              } else if (state is AuthAuthenticated) {
+                return const HomeScreen();
+              } else if (state is AuthUnauthenticated) {
+                return const LoginScreen();
+              }
+              return const SplashScreen();
+            },
+          ),
+        },
+        initialRoute: '/',
         locale: const Locale('ar', 'SA'),
         supportedLocales: const [
           Locale('ar', 'SA'),

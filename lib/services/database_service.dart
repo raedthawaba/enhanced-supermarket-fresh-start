@@ -38,7 +38,12 @@ class DatabaseService {
   }
 
   Future<void> init() async {
-    await database;
+    try {
+      await database;
+    } catch (e) {
+      print('Database initialization failed: $e');
+      // Continue with app startup even if database fails
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {

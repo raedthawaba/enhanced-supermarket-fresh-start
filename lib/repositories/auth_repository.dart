@@ -9,21 +9,31 @@ class AuthRepository {
   static const String _userKey = AppConstants.userKey;
 
   Future<bool> isAuthenticated() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(_tokenKey);
-    return token != null && token.isNotEmpty;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(_tokenKey);
+      return token != null && token.isNotEmpty;
+    } catch (e) {
+      print('Error checking authentication: $e');
+      return false;
+    }
   }
 
   Future<User> getCurrentUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString(_userKey);
-    
-    if (userJson == null) {
-      throw Exception('No user data found');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userJson = prefs.getString(_userKey);
+      
+      if (userJson == null) {
+        throw Exception('No user data found');
+      }
+      
+      final userMap = json.decode(userJson);
+      return User.fromJson(userMap);
+    } catch (e) {
+      print('Error getting current user: $e');
+      throw Exception('فشل في جلب بيانات المستخدم');
     }
-    
-    final userMap = json.decode(userJson);
-    return User.fromJson(userMap);
   }
 
   Future<User> login({

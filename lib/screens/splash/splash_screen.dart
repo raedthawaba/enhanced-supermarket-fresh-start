@@ -45,6 +45,13 @@ class _SplashScreenState extends State<SplashScreen>
     ));
 
     _animationController.forward();
+    
+    // Navigate to main app after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/main');
+      }
+    });
   }
 
   void _setStatusBarStyle() {
