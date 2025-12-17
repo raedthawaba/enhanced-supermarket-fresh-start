@@ -42,9 +42,9 @@ dependencies:
   encrypt: ^5.0.1
   crypto: ^3.0.3
   
-  # Payments
-  paypal_sdk: ^2.0.1
-  stripe_flutter: ^10.1.1
+  # Payments (will be added later with real implementation)
+  # paypal_sdk: ^2.0.1
+  # stripe_flutter: ^10.1.1
   
   # Utilities
   intl: ^0.18.1
