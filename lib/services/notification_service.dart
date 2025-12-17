@@ -133,17 +133,14 @@ class NotificationService {
     required String orderId,
     required DateTime scheduledDate,
   }) async {
-    await _notifications.zonedSchedule(
+    // Use schedule instead of zonedSchedule for simpler implementation
+    await _notifications.schedule(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
       message,
-      _notificationDetails,
       scheduledDate,
+      _notificationDetails,
       payload: 'reminder_$orderId',
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 

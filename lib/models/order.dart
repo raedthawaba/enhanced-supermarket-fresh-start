@@ -318,30 +318,30 @@ class Order extends Equatable {
 }
 
 enum OrderStatus {
-  pending,
-  confirmed,
-  preparing,
-  readyForDelivery,
-  outForDelivery,
-  delivered,
-  cancelled,
+  const pending,
+  const confirmed,
+  const preparing,
+  const readyForDelivery,
+  const outForDelivery,
+  const delivered,
+  const cancelled,
 }
 
 enum PaymentMethod {
-  cash,
-  visa,
-  mastercard,
-  amex,
-  mada,
-  stcPay,
-  applePay,
-  googlePay,
-  paypal,
+  const cash,
+  const visa,
+  const mastercard,
+  const amex,
+  const mada,
+  const stcPay,
+  const applePay,
+  const googlePay,
+  const paypal,
 }
 
 enum PaymentStatus {
-  pending,
-  paid,
-  unpaid,
-  failed,
+  const pending,
+  const paid,
+  const unpaid,
+  const failed,
 }

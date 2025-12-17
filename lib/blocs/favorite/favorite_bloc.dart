@@ -91,17 +91,37 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
         
         emit(FavoritesLoaded(favorites: updatedFavorites));
       } else {
-        // Find the product from current favorites or products list
-        final product = currentState.favorites.firstWhere(
-          (p) => p.id == event.productId,
-          orElse: () => throw Exception('Product not found'),
+        // Create a temporary product for demonstration (in real app, get from product repository)
+        final tempProduct = Product(
+          id: event.productId,
+          name: 'منتج مؤقت',
+          description: 'وصف مؤقت',
+          price: 0.0,
+          discountPrice: 0.0,
+          category: 'عام',
+          imageUrl: '',
+          isAvailable: true,
+          stockQuantity: 1,
+          brand: 'عام',
+          weight: '1',
+          unit: 'قطعة',
+          isOrganic: false,
+          isGlutenFree: false,
+          isVegan: false,
+          allergens: [],
+          nutrition: {},
+          tags: [],
+          rating: 0.0,
+          reviewCount: 0,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
         
-        await _favoriteRepository.addToFavorites(event.productId);
+        await _favoriteRepository.addToFavorites(tempProduct);
         
-        final updatedFavorites = [...currentState.favorites, product];
+        final updatedFavorites = [...currentState.favorites, tempProduct];
         
-        emit(FavoritesLoaded(favorites: updatedFavorites as List<Product>));
+        emit(FavoritesLoaded(favorites: updatedFavorites));
       }
     } catch (e) {
       emit(FavoriteError(message: e.toString()));

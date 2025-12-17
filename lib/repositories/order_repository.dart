@@ -152,7 +152,7 @@ class OrderRepository {
     
     final totalSpent = orders
         .where((order) => order.isDelivered)
-        .fold(0.0, (double sum, order) => sum + order.totalAmount);
+        .fold(0.0, (double sum, Order order) => sum + order.totalAmount);
     
     return {
       'totalOrders': totalOrders,
@@ -172,7 +172,7 @@ class OrderRepository {
     final orders = await getUserOrders();
     return orders
         .where((order) => order.isDelivered)
-        .fold(0.0, (double sum, order) => sum + order.totalAmount);
+        .fold(0.0, (double sum, Order order) => sum + order.totalAmount);
   }
 
   Future<int> getOrderCount() async {
