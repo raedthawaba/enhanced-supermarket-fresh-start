@@ -11,37 +11,76 @@ class DatabaseService {
   DatabaseService._internal();
 
   Database? _database;
+  bool _isInitialized = false;
+
+  // Helper method to check if platform supports database operations
+  bool get _supportsDatabase {
+    try {
+      if (kIsWeb) return true;
+      if (Platform.isAndroid || Platform.isIOS) return true;
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) return true;
+      return false;
+    } catch (e) {
+      print('Error checking platform support: $e');
+      return kIsWeb; // Assume web support as fallback
+    }
+  }
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+    try {
+      _database = await _initDatabase();
+      return _database!;
+    } catch (e) {
+      print('Failed to initialize database: $e');
+      // Return a mock database or throw exception based on requirements
+      rethrow;
+    }
   }
 
   Future<Database> _initDatabase() async {
-    // Initialize FFI loader for web and desktop platforms
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb) {
-      // Initialize FFI loader
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-    
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, AppConstants.databaseName);
+    try {
+      // Initialize FFI loader for web and desktop platforms
+      if (kIsWeb) {
+        // Web platform - initialize FFI
+        sqfliteFfiInit();
+        databaseFactory = databaseFactoryFfi;
+      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        // Desktop platforms - initialize FFI
+        sqfliteFfiInit();
+        databaseFactory = databaseFactoryFfi;
+      }
+      
+      final databasesPath = await getDatabasesPath();
+      final path = join(databasesPath, AppConstants.databaseName);
 
-    return await openDatabase(
-      path,
-      version: AppConstants.databaseVersion,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
+      return await openDatabase(
+        path,
+        version: AppConstants.databaseVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      );
+    } catch (e) {
+      print('Database initialization error: $e');
+      rethrow;
+    }
   }
 
   Future<void> init() async {
+    if (_isInitialized) return;
+    
     try {
+      if (!_supportsDatabase) {
+        print('Database operations not supported on this platform');
+        _isInitialized = true;
+        return;
+      }
+      
       await database;
+      _isInitialized = true;
     } catch (e) {
       print('Database initialization failed: $e');
+      _isInitialized = true; // Mark as initialized even if failed
       // Continue with app startup even if database fails
     }
   }

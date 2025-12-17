@@ -18,6 +18,7 @@ import 'package:supermarket_app/repositories/product_repository.dart';
 import 'package:supermarket_app/repositories/order_repository.dart';
 import 'package:supermarket_app/repositories/favorite_repository.dart';
 import 'package:supermarket_app/services/database_service.dart';
+import 'package:supermarket_app/services/simple_database_service.dart';
 import 'package:supermarket_app/services/notification_service.dart';
 import 'package:supermarket_app/services/locale_service.dart';
 import 'package:supermarket_app/utils/constants.dart';
@@ -28,18 +29,38 @@ void main() async {
   try {
     // Initialize Hive
     await Hive.initFlutter();
-    
+  } catch (e) {
+    print('Hive initialization error: $e');
+  }
+  
+  try {
     // Initialize local database
     await DatabaseService().init();
-    
+  } catch (e) {
+    print('Database initialization error: $e');
+    // Try simple database service as fallback
+    try {
+      print('Trying simple database service as fallback...');
+      await SimpleDatabaseService().init();
+      print('Simple database service initialized successfully');
+    } catch (fallbackError) {
+      print('Simple database service also failed: $fallbackError');
+      // Continue without database
+    }
+  }
+  
+  try {
     // Initialize notifications
     await NotificationService().init();
-    
+  } catch (e) {
+    print('Notification initialization error: $e');
+  }
+  
+  try {
     // Initialize locale service
     LocaleService().init();
   } catch (e) {
-    print('Initialization error: $e');
-    // Continue with app startup
+    print('Locale service initialization error: $e');
   }
   
   try {
