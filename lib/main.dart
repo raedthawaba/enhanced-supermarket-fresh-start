@@ -31,7 +31,7 @@ void main() async {
   await NotificationService().init();
   
   // Initialize locale service
-  await LocaleService().init();
+  LocaleService().init();
   
   runApp(const SupermarketApp());
 }
@@ -108,12 +108,12 @@ class SupermarketApp extends StatelessWidget {
               ),
             ),
           ),
-          cardTheme: CardTheme(
+          cardTheme: const CardTheme(
             elevation: 2,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,

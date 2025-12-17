@@ -86,11 +86,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       if (state is ProductsLoaded) {
         final currentState = state as ProductsLoaded;
-        final baseProducts = currentState.filteredProducts.isNotEmpty 
-            ? currentState.filteredProducts 
+        final baseProducts = (currentState.filteredProducts?.isNotEmpty ?? false)
+            ? currentState.filteredProducts! 
             : currentState.products;
         
-        List<Product> filteredProducts = baseProducts;
+        final List<Product> filteredProducts = baseProducts;
         
         // Filter by category
         if (event.category != null && event.category!.isNotEmpty) {

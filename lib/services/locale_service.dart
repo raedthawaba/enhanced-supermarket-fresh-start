@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supermarket_app/utils/constants.dart';
 
@@ -30,6 +31,11 @@ class LocaleService {
   Future<void> setLocale(Locale locale) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(AppConstants.localeKey, '${locale.languageCode}_${locale.countryCode}');
+  }
+
+  // For compatibility - initialize without async
+  void init() {
+    // Initialize method for compatibility
   }
 
   bool isRTL(Locale locale) {
