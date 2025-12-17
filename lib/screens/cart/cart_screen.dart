@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supermarket_app/blocs/cart/cart_bloc.dart';
+import 'package:supermarket_app/models/cart.dart';
 import 'package:supermarket_app/widgets/loading_overlay.dart';
 
 class CartScreen extends StatefulWidget {
@@ -263,7 +264,7 @@ class _CartScreenState extends State<CartScreen> {
           child: Column(
             children: [
               _buildSummaryRow('المجموع الفرعي:', cart.subtotal),
-              _buildSummaryRow('الخصومات:', '-${cart.discountTotal}'),
+              _buildSummaryRow('الخصومات:', -cart.discountTotal),
               _buildSummaryRow('رسوم التوصيل:', cart.deliveryFee),
               _buildSummaryRow('الضريبة (15%):', cart.tax),
               const Divider(),

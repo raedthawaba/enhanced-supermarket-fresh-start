@@ -161,6 +161,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
       case OrderStatus.cancelled:
         statusColor = Colors.red;
         break;
+      default:
+        statusColor = Colors.grey;
+        break;
     }
 
     return Card(

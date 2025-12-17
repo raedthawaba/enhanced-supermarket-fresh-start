@@ -138,6 +138,7 @@ class NotificationService {
       title,
       message,
       _notificationDetails,
+      scheduledDate,
       payload: 'reminder_$orderId',
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:

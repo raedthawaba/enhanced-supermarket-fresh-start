@@ -91,11 +91,17 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
         
         emit(FavoritesLoaded(favorites: updatedFavorites));
       } else {
-        await _favoriteRepository.addToFavorites(event.product);
+        // Find the product from current favorites or products list
+        final product = currentState.favorites.firstWhere(
+          (p) => p.id == event.productId,
+          orElse: () => throw Exception('Product not found'),
+        );
         
-        final updatedFavorites = [...currentState.favorites, event.product];
+        await _favoriteRepository.addToFavorites(event.productId);
         
-        emit(FavoritesLoaded(favorites: updatedFavorites));
+        final updatedFavorites = [...currentState.favorites, product];
+        
+        emit(FavoritesLoaded(favorites: updatedFavorites as List<Product>));
       }
     } catch (e) {
       emit(FavoriteError(message: e.toString()));

@@ -20,7 +20,9 @@ class ProfileLoaded extends ProfileState {
   List<Object> get props => [profile];
 }
 
-class ProfilePasswordChanged extends ProfileState {}
+class ProfilePasswordChanged extends ProfileState {
+  const ProfilePasswordChanged();
+}
 
 class ProfileError extends ProfileState {
   final String message;

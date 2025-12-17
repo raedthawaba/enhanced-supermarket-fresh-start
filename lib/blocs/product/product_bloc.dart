@@ -90,7 +90,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             ? currentState.filteredProducts! 
             : currentState.products;
         
-        final List<Product> filteredProducts = baseProducts;
+        List<Product> filteredProducts = baseProducts;
         
         // Filter by category
         if (event.category != null && event.category!.isNotEmpty) {

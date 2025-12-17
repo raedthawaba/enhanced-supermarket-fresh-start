@@ -147,7 +147,7 @@ class CategoryCard extends StatelessWidget {
       case 'مشروبات':
         return Icons.local_drink;
       case 'مكسرات':
-        return Icons.nutrition;
+        return Icons.restaurant;
       case 'تنظيف':
         return Icons.cleaning_services;
       case 'عناية شخصية':

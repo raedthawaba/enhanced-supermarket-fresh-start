@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supermarket_app/blocs/cart/cart_bloc.dart';
 import 'package:supermarket_app/blocs/product/product_bloc.dart';
+import 'package:supermarket_app/models/product.dart';
 import 'package:supermarket_app/utils/constants.dart';
 import 'package:supermarket_app/widgets/loading_overlay.dart';
 
@@ -89,8 +91,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     setState(() {
                       _currentCategory = category;
                     });
-Bloc>().add(
-                    context.read<Product                      LoadProductsByCategory(category: category),
+                    context.read<ProductBloc>().add(
+                      LoadProductsByCategory(category: category),
                     );
                   },
                   child: Container(
