@@ -50,7 +50,7 @@ dependencies:
   intl: ^0.18.1
   uuid: ^4.2.1
   image_picker: ^1.0.4
-  file_picker: ^6.1.1
+  # file_picker: ^6.1.1  # Commented out for now - needs platform-specific implementations
   permission_handler: ^11.0.1
   url_launcher: ^6.2.2
   
@@ -103,11 +103,12 @@ flutter:
   
   assets:
     - assets/images/
-    - assets/fonts/
+    # - assets/fonts/  # Commented out - add fonts later
+    # Cairo font commented out - will use system default
   
-  fonts:
-    - family: Cairo
-      fonts:
-        - asset: assets/fonts/Cairo-Regular.ttf
-        - asset: assets/fonts/Cairo-Bold.ttf
-          weight: 700
+  # fonts:
+  #   - family: Cairo
+  #     fonts:
+  #       - asset: assets/fonts/Cairo-Regular.ttf
+  #       - asset: assets/fonts/Cairo-Bold.ttf
+  #         weight: 700
