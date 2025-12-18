@@ -7,6 +7,7 @@ import 'package:supermarket_app/screens/splash/splash_screen.dart';
 import 'package:supermarket_app/screens/auth/login_screen.dart';
 import 'package:supermarket_app/screens/home/home_screen.dart';
 import 'package:supermarket_app/test_app.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supermarket_app/blocs/cart/cart_bloc.dart';
 import 'package:supermarket_app/blocs/product/product_bloc.dart';
 import 'package:supermarket_app/blocs/order/order_bloc.dart';
@@ -185,6 +186,11 @@ class SupermarketApp extends StatelessWidget {
         supportedLocales: const [
           Locale('ar', 'SA'),
           Locale('en', 'US'),
+        ],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
       ),
     );

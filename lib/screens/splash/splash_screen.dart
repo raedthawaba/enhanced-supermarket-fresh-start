@@ -46,10 +46,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController.forward();
     
-    // Navigate to main app after 3 seconds
+    // Let the AuthBloc handle navigation after initialization
+    // We'll just complete the splash animation
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        // The AuthBloc will handle navigation based on authentication state
+        print('Splash animation completed');
       }
     });
   }

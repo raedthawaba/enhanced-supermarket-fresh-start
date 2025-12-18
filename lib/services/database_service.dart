@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:supermarket_app/utils/constants.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
@@ -40,26 +39,31 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     try {
-      // Initialize FFI loader for web and desktop platforms
       if (kIsWeb) {
-        // Web platform - initialize FFI
-        sqfliteFfiInit();
-        databaseFactory = databaseFactoryFfi;
-      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        // Desktop platforms - initialize FFI
-        sqfliteFfiInit();
-        databaseFactory = databaseFactoryFfi;
+        // For web, we'll skip database initialization for now
+        // In a real app, you might use IndexedDB or other web-compatible storage
+        print('Skipping database initialization on web platform');
+        throw Exception('Database not supported on web');
       }
       
-      final databasesPath = await getDatabasesPath();
-      final path = join(databasesPath, AppConstants.databaseName);
+      // For mobile and desktop platforms
+      if (Platform.isAndroid || Platform.isIOS) {
+        final databasesPath = await getDatabasesPath();
+        final path = join(databasesPath, AppConstants.databaseName);
 
-      return await openDatabase(
-        path,
-        version: AppConstants.databaseVersion,
-        onCreate: _onCreate,
-        onUpgrade: _onUpgrade,
-      );
+        return await openDatabase(
+          path,
+          version: AppConstants.databaseVersion,
+          onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
+        );
+      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        // For desktop, you might want to use a different approach
+        print('Desktop platform - skipping database for now');
+        throw Exception('Database not implemented for desktop');
+      }
+      
+      throw Exception('Unsupported platform');
     } catch (e) {
       print('Database initialization error: $e');
       rethrow;
