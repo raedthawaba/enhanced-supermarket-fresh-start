@@ -235,7 +235,7 @@ lib/
 
 ---
 
-**تم التطوير بواسطة MiniMax Agent** 🚀
+**تم التطوير بواسطة MiniMax ** 🚀
 =======
 # enhanced-supermarket-fresh-start
 Fresh empty repository for supermarket system
