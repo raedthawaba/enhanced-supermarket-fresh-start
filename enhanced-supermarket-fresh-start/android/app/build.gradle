@@ -1,0 +1,48 @@
+def localPropertiesFile = new File(rootProject.projectDir, 'local.properties')
+def properties = new Properties()
+
+assert localPropertiesFile.exists(), "local.properties not found at ${localPropertiesFile.absolutePath}"
+localPropertiesFile.withReader('UTF-8') { reader -> properties.load(reader) }
+
+def flutterSdkPath = properties.getProperty('flutter.sdk')
+assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+
+android {
+    namespace "com.example.supermarket_app"
+    compileSdk 34
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.example.supermarket_app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {}

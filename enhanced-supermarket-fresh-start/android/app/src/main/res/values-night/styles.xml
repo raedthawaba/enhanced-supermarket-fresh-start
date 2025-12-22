@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <style name="FlutterNormalTheme" merge="@style/FlutterNormalTheme">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+</resources>
