@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.supermarket_app">
+    <!-- Flutter needs it to communicate with the running application
+         if permission is denied. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
