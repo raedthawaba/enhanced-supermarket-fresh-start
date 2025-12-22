@@ -1,5 +1,5 @@
 name: supermarket_app
-description: متجر إلكتروني متكامل للسوبر ماركت
+description: تطبيق سوبر ماركت بسيط مع شاشة تسجيل دخول
 
 publish_to: 'none'
 
@@ -15,89 +15,14 @@ dependencies:
   # Localization
   flutter_localizations:
     sdk: flutter
-  intl: ^0.20.2
+  intl: ^0.19.0
   
   # UI & Navigation
   cupertino_icons: ^1.0.6
-  flutter_svg: ^2.0.7
-  cached_network_image: ^3.3.0
-  shimmer: ^3.0.0
-  flutter_staggered_animations: ^1.1.1
-  
-  # State Management
-  flutter_bloc: ^8.1.3
-  get_it: ^7.6.4
-  injectable: ^2.3.2
-  equatable: ^2.0.5
-  
-  # Database & Storage
-  sqflite: ^2.3.0
-  shared_preferences: ^2.2.2
-  path_provider: ^2.1.1
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  
-  # HTTP & API
-  http: ^1.1.2
-  dio: ^5.3.3
-  retrofit: ^4.0.3
-  
-  # Authentication & Security
-  local_auth: ^2.1.7
-  encrypt: ^5.0.1
-  crypto: ^3.0.3
-  
-  # Payments (will be added later with real implementation)
-  # paypal_sdk: ^2.0.1
-  # stripe_flutter: ^10.1.1
-  
-  # Utilities
-  uuid: ^4.2.1
-  image_picker: ^1.0.4
-  # file_picker: ^6.1.1  # Commented out for now - needs platform-specific implementations
-  permission_handler: ^11.0.1
-  url_launcher: ^6.2.2
-  
-  # Notification
-  flutter_local_notifications: ^16.3.2
-  
-  # Charts & Analytics (optional for future)
-  # fl_chart: ^0.66.0
-  
-  # Scanner
-  qr_code_scanner: ^1.0.1
-  mobile_scanner: ^3.5.6
-  
-  # Firebase (future integration - commented for now)
-  # firebase_core: ^2.24.2
-  # firebase_auth: ^4.15.3
-  # cloud_firestore: ^4.13.6
-  # firebase_storage: ^11.6.0
-  # firebase_messaging: ^14.7.10
-  
-  # Printing & Receipts
-  printing: ^5.11.1
-  
-  # Image Processing
-  image: ^4.1.3
-  
-  # PDF
-  pdf: ^3.10.7
-  
-  # Calendar (optional)
-  # table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  
-  # Code Generation
-  build_runner: ^2.4.7
-  json_annotation: ^4.8.1
-  json_serializable: ^6.7.1
-  injectable_generator: ^2.4.1
-  hive_generator: ^2.0.1
-  retrofit_generator: ^8.0.6
   
   # Linting
   flutter_lints: ^3.0.1
@@ -107,8 +32,6 @@ flutter:
   
   assets:
     - assets/images/
-    # - assets/fonts/  # Commented out - add fonts later
-    # Cairo font commented out - will use system default
   
   # fonts:
   #   - family: Cairo

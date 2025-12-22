@@ -1,76 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:supermarket_app/app.dart';
-import 'package:supermarket_app/blocs/auth/auth_bloc.dart';
-import 'package:supermarket_app/screens/splash/splash_screen.dart';
-import 'package:supermarket_app/screens/auth/login_screen.dart';
-import 'package:supermarket_app/screens/home/home_screen.dart';
-import 'package:supermarket_app/test_app.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:supermarket_app/blocs/cart/cart_bloc.dart';
-import 'package:supermarket_app/blocs/product/product_bloc.dart';
-import 'package:supermarket_app/blocs/order/order_bloc.dart';
-import 'package:supermarket_app/blocs/favorite/favorite_bloc.dart';
-import 'package:supermarket_app/blocs/notification/notification_bloc.dart';
-import 'package:supermarket_app/blocs/profile/profile_bloc.dart';
-import 'package:supermarket_app/repositories/auth_repository.dart';
-import 'package:supermarket_app/repositories/product_repository.dart';
-import 'package:supermarket_app/repositories/order_repository.dart';
-import 'package:supermarket_app/repositories/favorite_repository.dart';
-import 'package:supermarket_app/services/database_service.dart';
-import 'package:supermarket_app/services/simple_database_service.dart';
-import 'package:supermarket_app/services/notification_service.dart';
-import 'package:supermarket_app/services/locale_service.dart';
-import 'package:supermarket_app/utils/constants.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  try {
-    // Initialize Hive
-    await Hive.initFlutter();
-  } catch (e) {
-    print('Hive initialization error: $e');
-  }
-  
-  try {
-    // Initialize local database
-    await DatabaseService().init();
-  } catch (e) {
-    print('Database initialization error: $e');
-    // Try simple database service as fallback
-    try {
-      print('Trying simple database service as fallback...');
-      await SimpleDatabaseService().init();
-      print('Simple database service initialized successfully');
-    } catch (fallbackError) {
-      print('Simple database service also failed: $fallbackError');
-      // Continue without database
-    }
-  }
-  
-  try {
-    // Initialize notifications
-    await NotificationService().init();
-  } catch (e) {
-    print('Notification initialization error: $e');
-  }
-  
-  try {
-    // Initialize locale service
-    LocaleService().init();
-  } catch (e) {
-    print('Locale service initialization error: $e');
-  }
-  
-  try {
-    runApp(const SupermarketApp());
-  } catch (e) {
-    print('Failed to run main app: $e');
-    // Fallback to simple test app
-    runApp(const TestApp());
-  }
+void main() {
+  runApp(const SupermarketApp());
 }
 
 class SupermarketApp extends StatelessWidget {
@@ -78,120 +9,320 @@ class SupermarketApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(
-            authRepository: AuthRepository(),
-          )..add(LoadAuthStatus()),
+    return MaterialApp(
+      title: 'متجر السوبر ماركت',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
         ),
-        BlocProvider<ProductBloc>(
-          create: (context) => ProductBloc(
-            productRepository: ProductRepository(),
-          )..add(LoadProducts()),
-        ),
-        BlocProvider<CartBloc>(
-          create: (context) => CartBloc(),
-        ),
-        BlocProvider<OrderBloc>(
-          create: (context) => OrderBloc(
-            orderRepository: OrderRepository(),
+        useMaterial3: true,
+      ),
+      home: const LoginScreen(),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF4CAF50),
+              Color(0xFF81C784),
+            ],
           ),
         ),
-        BlocProvider<FavoriteBloc>(
-          create: (context) => FavoriteBloc(
-            favoriteRepository: FavoriteRepository(),
-          )..add(LoadFavorites()),
-        ),
-        BlocProvider<NotificationBloc>(
-          create: (context) => NotificationBloc(),
-        ),
-        BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(),
-        ),
-      ],
-      child: MaterialApp(
-        title: AppConstants.appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          primaryColor: const Color(0xFF4CAF50),
-          fontFamily: 'Cairo',
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF4CAF50),
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-            centerTitle: true,
-            backgroundColor: Color(0xFF4CAF50),
-            foregroundColor: Colors.white,
-            titleTextStyle: TextStyle(
-              fontFamily: 'Cairo',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4CAF50),
-              foregroundColor: Colors.white,
-              elevation: 2,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // شعار التطبيق
+                  const Icon(
+                    Icons.store,
+                    size: 100,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'متجر السوبر ماركت',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'مرحباً بك، سجل دخولك للمتابعة',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // حقل البريد الإلكتروني
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'البريد الإلكتروني',
+                      hintText: 'أدخل بريدك الإلكتروني',
+                      prefixIcon: const Icon(Icons.email),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'يرجى إدخال البريد الإلكتروني';
+                      }
+                      if (!value.contains('@')) {
+                        return 'يرجى إدخال بريد إلكتروني صحيح';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // حقل كلمة المرور
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'كلمة المرور',
+                      hintText: 'أدخل كلمة المرور',
+                      prefixIcon: const Icon(Icons.lock),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'يرجى إدخال كلمة المرور';
+                      }
+                      if (value.length < 6) {
+                        return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // زر تسجيل الدخول
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF4CAF50),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'تسجيل الدخول',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // زر إنشاء حساب جديد
+                  TextButton(
+                    onPressed: () {
+                      _showCreateAccountDialog();
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text(
+                      'إنشاء حساب جديد',
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // معلومات إضافية
+                  const Text(
+                    'بيانات تجريبية:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const Text(
+                    'البريد: admin@supermarket.com\nكلمة المرور: 123456',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white54,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          cardTheme: const CardThemeData(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.grey[100],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFF4CAF50), width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
         ),
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/main': (context) => BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              if (state is AuthLoading) {
-                return const SplashScreen();
-              } else if (state is AuthAuthenticated) {
-                return const HomeScreen();
-              } else if (state is AuthUnauthenticated) {
-                return const LoginScreen();
-              }
-              return const SplashScreen();
+      ),
+    );
+  }
+
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      // التحقق من البيانات التجريبية
+      if (_emailController.text == 'admin@supermarket.com' &&
+          _passwordController.text == '123456') {
+        // الانتقال إلى الشاشة الرئيسية
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      } else {
+        // عرض رسالة خطأ
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('بيانات دخول خاطئة!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showCreateAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('إنشاء حساب جديد'),
+          content: const Text(
+            'سيتم تطوير هذه الميزة قريباً!\n\nيمكنك استخدام البيانات التجريبية للدخول:\nالبريد: admin@supermarket.com\nكلمة المرور: 123456',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('حسناً'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('الصفحة الرئيسية'),
+        backgroundColor: const Color(0xFF4CAF50),
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
             },
           ),
-        },
-        initialRoute: '/',
-        locale: const Locale('ar', 'SA'),
-        supportedLocales: const [
-          Locale('ar', 'SA'),
-          Locale('en', 'US'),
         ],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFE8F5E8),
+              Color(0xFF4CAF50),
+            ],
+          ),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.store,
+                size: 120,
+                color: Color(0xFF4CAF50),
+              ),
+              SizedBox(height: 24),
+              Text(
+                'مرحباً بك في المتجر!',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2E7D32),
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'تم تسجيل الدخول بنجاح',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFF4CAF50),
+                ),
+              ),
+              SizedBox(height: 32),
+              Text(
+                'هنا يمكنك إضافة مميزات السوبر ماركت',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF4CAF50),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
